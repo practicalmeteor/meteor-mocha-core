@@ -108,8 +108,12 @@ function setupGlobals(mocha) {
 // can use to ensure they work well with other test driver packages.
 const mochaInstance = new Mocha({
   ui: 'bdd',
-  ignoreLeaks: true
+  ignoreLeaks: true,
+  timeout: process.env.MOCHA_TIMEOUT || 2000
 });
 setupGlobals(mochaInstance);
- 
+
+// Pass timeout to client
+Meteor.settings.public["MOCHA_TIMEOUT"] = process.env.MOCHA_TIMEOUT || 2000;
+
 export { mochaInstance, setupGlobals, Mocha };
