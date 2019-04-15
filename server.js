@@ -26,14 +26,15 @@ function setupGlobals(mocha) {
     //forking mocha itself.
 
     const wrappedFunction = function (done) {
-      var self = this._runnable;
+      var self = this;
+      var runnable = this._runnable;
       var run = function() {
         try {
           // Sync call
           if (fn.length == 0) {
             var result = fn.call(self);
             if (result && typeof result.then === 'function') {
-              self.resetTimeout();
+              runnable.resetTimeout();
               result
                 .then(function() {
                     done();
@@ -45,7 +46,7 @@ function setupGlobals(mocha) {
                     done(reason || new Error('Promise rejected with no or falsy reason'));
                   });
             } else {
-              if (self.asyncOnly) {
+              if (runnable.asyncOnly) {
                 return done(new Error('--async-only option in use without declaring `done()` or returning a promise'));
               }
 
